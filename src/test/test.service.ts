@@ -1,36 +1,27 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/database/prisma.service';
 import { Test } from './dto/test.dto';
+import { DbClientFactory } from 'src/factory/dbClient.factory';
 
 @Injectable()
 export class TestService {
-  constructor(private prismaService: PrismaService) {}
+  dbClient: any;
+  constructor(private dbClientFactory: DbClientFactory) {
+    this.dbClient = this.dbClientFactory.getDatabaseClient('Prisma');
+  }
 
   async getTests(): Promise<Test[]> {
-    try {
-      const tests = await this.prismaService.test.findMany({
-        include: {
-          questions: true,
-        },
-      });
-      return tests;
-    } catch (error) {
-      throw new Error(error);
-    }
+    const tests = await this.dbClient.findMany('test', {
+      include: { questions: true },
+    });
+    return tests;
   }
 
   async getTest(id: string): Promise<Test> {
-    try {
-      const test = await this.prismaService.test.findUnique({
-        where: { id },
-        include: {
-          questions: true,
-        },
-      });
-      if (!test) throw new NotFoundException('Test not found');
-      return test;
-    } catch (error) {
-      throw new Error(error);
-    }
+    const test = await this.dbClient.findUnique('test', {
+      where: { id },
+      include: { questions: true },
+    });
+    if (!test) throw new NotFoundException('Test not found');
+    return test;
   }
 }
