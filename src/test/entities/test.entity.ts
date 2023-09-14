@@ -1,6 +1,7 @@
 import { Question } from './question.entity';
 
-export class Test {
-  uuid: string;
-  question: Question[];
+export interface Test {
+  id: string;
+  name: string;
+  questions: Question[];
 }

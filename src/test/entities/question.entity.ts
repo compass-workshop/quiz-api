@@ -1,20 +1,8 @@
-export class Question {
+export interface Question {
   id: string;
+  text: string;
   type: string;
+  options: string[];
   maxScore: number;
-  question: string;
-  options: [
-    {
-      text: string;
-    },
-    {
-      text: string;
-    },
-    {
-      text: string;
-    },
-    {
-      text: string;
-    },
-  ];
+  answer: string;
 }
