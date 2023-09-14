@@ -11,5 +11,24 @@ datasource db {
 }
 
 model User {
-  userId    String    @id
+  id        String @id @default(uuid())
+  firstname String
+  lastname  String
+  email     String @unique
+}
+
+model Test {
+  id        String     @id @default(uuid())
+  name      String
+  questions Question[]
+}
+
+model Question {
+  id       String   @id @default(uuid())
+  text     String
+  type     String
+  options  String[]
+  maxScore Int
+  answer   String
+  tests    Test[]
 }
