@@ -26,6 +26,14 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## DB Setup
+
+Download Postgres from https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+
+Set below environment variables (in the .env file for local development)
+
+1. **DATABASE_URL** ="postgresql://[USER-NAME]:[PASSWORD]@[HOST]:[POSTGRES-PORT]/[DB-NAME]?schema=public" (_Example: "postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"_)
+
 ## Installation
 
 ```bash
@@ -33,8 +41,6 @@ $ npm install
 ```
 
 ## Running the app
-
-Download Postgres from https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
 
 ```bash
 # development
@@ -45,6 +51,9 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+
+# to create db in local env, run below command (assuming Postrges is downloaded and correct DATABASE_URL is set in the .env file)
+$ npx prisma migrate dev
 ```
 
 ## Test
