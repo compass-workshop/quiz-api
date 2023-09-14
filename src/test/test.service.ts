@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
-import { Test } from './entities/test.entity';
+import { Test } from './dto/test.dto';
 
 @Injectable()
 export class TestService {
@@ -30,7 +30,7 @@ export class TestService {
       if (!test) throw new NotFoundException('Test not found');
       return test;
     } catch (error) {
-      throw new NotFoundException('Test not found');
+      throw new Error(error);
     }
   }
 }
