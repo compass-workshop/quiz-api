@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Test } from './dto/test.dto';
-import { DbClientFactory } from 'src/factory/dbClient.factory';
+import { DbClientFactory } from 'src/dblayer/db-client.factory';
 
 @Injectable()
 export class TestService {
@@ -10,17 +10,12 @@ export class TestService {
   }
 
   async getTests(): Promise<Test[]> {
-    const tests = await this.dbClient.findMany('test', {
-      include: { questions: true },
-    });
+    const tests = await this.dbClient.findAllTest();
     return tests;
   }
 
   async getTest(id: string): Promise<Test> {
-    const test = await this.dbClient.findUnique('test', {
-      where: { id },
-      include: { questions: true },
-    });
+    const test = await this.dbClient.findTest(id);
     if (!test) throw new NotFoundException('Test not found');
     return test;
   }

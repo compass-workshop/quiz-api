@@ -1,10 +1,16 @@
-export class PrismaLayer {
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/database/prisma.service';
+
+@Injectable()
+export class baseDBLayer {
+  constructor(private prismaService: PrismaService) {}
+
   async findMany<T>(
     model: string,
     options: { where?: any; include?: any },
   ): Promise<T[]> {
     try {
-      return await this[model].findMany({
+      return await this.prismaService[model].findMany({
         where: options.where,
         include: options.include,
       });
@@ -19,7 +25,7 @@ export class PrismaLayer {
     options: { where?: any; include?: any },
   ): Promise<T[]> {
     try {
-      return await this[model].findUnique({
+      return await this.prismaService[model].findUnique({
         where: options.where,
         include: options.include,
       });

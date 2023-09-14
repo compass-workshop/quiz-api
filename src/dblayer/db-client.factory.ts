@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/database/prisma.service';
+import { PrismaDBLayer } from './prisma-layer/prisma-dblayer';
 
 @Injectable()
 export class DbClientFactory {
-  constructor(private prismaService: PrismaService) {}
+  constructor(private prismaDbLayer: PrismaDBLayer) {}
 
   getDatabaseClient(flag: string) {
     if (flag === 'Prisma') {
-      return this.prismaService;
+      return this.prismaDbLayer;
     }
   }
 }
