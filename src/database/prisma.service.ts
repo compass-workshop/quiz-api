@@ -11,11 +11,11 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     await this.$connect();
   }
 
-  async findMany(model: any, options: any) {
-    this.prismaLayer.findMany(model, options);
-  }
+  // async findMany(model: any, options: any) {
+  //   this.prismaLayer.findMany(model, options);
+  // }
 
-  async findUnique(model: any, options: any) {
-    this.prismaLayer.findUnique(model, options);
-  }
+  // async findUnique(model: any, options: any) {
+  //   this.prismaLayer.findUnique(model, options);
+  // }
 }
