@@ -34,6 +34,8 @@ $ npm install
 
 ## Running the app
 
+Download Postgres from https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+
 ```bash
 # development
 $ npm run start
