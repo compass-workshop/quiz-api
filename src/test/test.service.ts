@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Test } from './dto/test.dto';
-import { DbClientFactory } from 'src/db-client/db-client.factory';
+import { DBClientFactory } from 'src/db-client/db-client.factory';
 
 @Injectable()
 export class TestService {
   dbClient: any;
-  constructor(private dbClientFactory: DbClientFactory) {
+  constructor(private dbClientFactory: DBClientFactory) {
     this.dbClient = this.dbClientFactory.getDatabaseClient('Prisma');
   }
 
