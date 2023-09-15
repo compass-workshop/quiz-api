@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Test } from './dto/test.dto';
-import { DbClientFactory } from 'src/dblayer/db-client.factory';
+import { DbClientFactory } from 'src/db-client/db-client.factory';
 
 @Injectable()
 export class TestService {

@@ -1,14 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TestService } from './test.service';
-import { DatabaseModule } from 'src/database/database.module';
 import { TestController } from './test.controller';
-import { DbClientFactory } from 'src/dblayer/db-client.factory';
-import { PrismaDBLayer } from 'src/dblayer/prisma-layer/prisma-dblayer';
-import { baseDBLayer } from 'src/dblayer/base-dblayer';
+import { DatabaseModule } from 'src/database/database.module';
+import { DBClientModule } from 'src/db-client/bd-client.module';
 
 @Module({
-  imports: [DatabaseModule],
-  providers: [TestService, DbClientFactory, PrismaDBLayer, baseDBLayer],
+  imports: [DatabaseModule, DBClientModule],
+  providers: [TestService],
   controllers: [TestController],
 })
 export class TestModule {}
