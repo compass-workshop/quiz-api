@@ -17,7 +17,11 @@ export class TestController {
   }
 
   @Post('/:userId/:testId')
-  async submitTest(@Body() testBody: SubmittedTestDto) {
+  async submitTest(
+    @Body() testBody: SubmittedTestDto,
+    @Param('userId') userId: string,
+    @Param('testId') testId: string,
+  ) {
     return this.testService.submitTest(testBody);
   }
 }

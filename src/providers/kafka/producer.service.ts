@@ -1,11 +1,14 @@
 import { ConfigService } from '@nestjs/config';
 import { ProducerRecord } from 'kafkajs';
 import { KafkajsProducer } from './kafkajs.producer';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class ProducerService {
   private readonly clientId = 'quiz-client';
 
   constructor(private readonly configService: ConfigService) {}
+
   async produce(record: ProducerRecord) {
     const { topic } = record;
     const producer = await this.getProducer(topic);

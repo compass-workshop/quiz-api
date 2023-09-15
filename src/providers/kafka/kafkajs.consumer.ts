@@ -20,7 +20,6 @@ export class KafkajsConsumer {
     private readonly topic: ConsumerSubscribeTopics,
     config: ConsumerConfig,
     kafkaConfig: KafkaConfig,
-    private readonly registryService: RegistryService,
   ) {
     this.kafka = new Kafka(kafkaConfig);
     this.consumer = this.kafka.consumer(config);
@@ -47,7 +46,7 @@ export class KafkajsConsumer {
     await this.consumer.run({
       eachMessage: async ({ message }) => {
         try {
-          this.onMessage(message);
+          // this.onMessage(message);
         } catch (error) {
           this.logger.error('Error consuming message..', error);
         }
@@ -55,17 +54,17 @@ export class KafkajsConsumer {
     });
   }
 
-  async onMessage(message) {
-    const key = message.key;
-    const decodedMessage: any = await this.registryService.decode(
-      message.value,
-    );
+  // async onMessage(message) {
+  //   const key = message.key;
+  //   const decodedMessage: any = await this.registryService.decode(
+  //     message.value,
+  //   );
 
-    this.logger.log('Consumed message:', {
-      key: key,
-      value: decodedMessage,
-    });
-  }
+  //   this.logger.log('Consumed message:', {
+  //     key: key,
+  //     value: decodedMessage,
+  //   });
+  // }
 
   async connect() {
     try {
