@@ -1,12 +1,11 @@
-import { IsNotEmpty, IsString, IsNumber, IsEnum } from 'class-validator';
-import { SelectedAnswer } from '../enum/selected-answer.enum';
+import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
 
 class SubmittedAnswer {
   @IsString()
   questionId: string;
 
-  @IsEnum(SelectedAnswer)
-  selectedAnswer: SelectedAnswer;
+  @IsString()
+  selectedAnswer: string;
 }
 
 export class SubmittedTestDto {
