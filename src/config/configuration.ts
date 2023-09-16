@@ -14,6 +14,10 @@ export default () => ({
         eventName: 'submittedTest',
         name: `quiz.submit-test`,
       },
+      evaluatedTestTopic: {
+        eventName: 'evaluatedTest',
+        name: `quiz.evaluated-test`,
+      },
     },
     groupId: `quiz-groupid`,
   },

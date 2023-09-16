@@ -1,44 +1,35 @@
-import { Logger } from '@nestjs/common';
+import { Injectable, OnApplicationShutdown } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { KafkajsConsumer } from './kafkajs.consumer';
-import { RegistryService } from './registry.service';
+import { ConsumerConfig, ConsumerSubscribeTopics, KafkaMessage } from 'kafkajs';
+import { IConsumer } from './interfaces/consumer.interface';
 
-export class ConsumerService {
-  private readonly logger = new Logger(ConsumerService.name);
+interface KafkajsConsumerOptions {
+  topic: ConsumerSubscribeTopics;
+  config: ConsumerConfig;
+  onMessage: (message: KafkaMessage) => Promise<void>;
+}
 
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly registryService: RegistryService,
-  ) {}
+@Injectable()
+export class ConsumerService implements OnApplicationShutdown {
+  private readonly consumers: IConsumer[] = [];
 
-  async consume(message: any) {
-    const { topics, groupId } = this.configService.get('kafka');
+  constructor(private readonly configService: ConfigService) {}
 
-    const topic = {
-      topics: [topics?.submittedTestTopic?.name],
-      fromBeginning: false,
-    };
-
-    const config = { groupId: groupId };
-
+  async consume({ topic, config, onMessage }: KafkajsConsumerOptions) {
     const consumer = new KafkajsConsumer(
       topic,
       config,
       this.configService.get('kafka'),
     );
     await consumer.connect();
-    await consumer.consumeNew(message);
+    await consumer.consume(onMessage);
+    this.consumers.push(consumer);
   }
 
-  async onMessage(message) {
-    const key = message.key;
-    const decodedMessage: any = await this.registryService.decode(
-      message.value,
-    );
-
-    this.logger.log('Consumed message:', {
-      key: key,
-      value: decodedMessage,
-    });
+  async onApplicationShutdown() {
+    for (const consumer of this.consumers) {
+      await consumer.disconnect();
+    }
   }
 }

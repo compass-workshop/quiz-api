@@ -8,10 +8,9 @@ import {
   KafkaMessage,
 } from 'kafkajs';
 import { sleep, retry } from 'radash';
-import { RegistryService } from './registry.service';
-// import { IConsumer } from '../../common/interfaces/consumer.interface';
+import { IConsumer } from './interfaces/consumer.interface';
 
-export class KafkajsConsumer {
+export class KafkajsConsumer implements IConsumer {
   private readonly kafka: Kafka;
   private readonly consumer: Consumer;
   private readonly logger: Logger;
@@ -26,45 +25,19 @@ export class KafkajsConsumer {
     this.logger = new Logger(`${topic.topics.join(',')}-${config.groupId}`);
   }
 
-  // async consume(onMessage: (message: KafkaMessage) => Promise<void>) {
-  //   await this.consumer.subscribe(this.topic);
-  //   await this.consumer.run({
-  //     eachMessage: async ({ message, partition }) => {
-  //       this.logger.debug(`Processing message partition: ${partition}`);
-  //       try {
-  //         await retry({ times: 2 }, async () => onMessage(message));
-  //       } catch (error) {
-  //         this.logger.error('Error consuming message..', error);
-  //       }
-  //     },
-  //   });
-  // }
-
-
-  async consumeNew(message) {
+  async consume(onMessage: (message: KafkaMessage) => Promise<void>) {
     await this.consumer.subscribe(this.topic);
     await this.consumer.run({
-      eachMessage: async ({ message }) => {
+      eachMessage: async ({ message, partition }) => {
+        this.logger.debug(`Processing message partition: ${partition}`);
         try {
-          // this.onMessage(message);
+          await retry({ times: 2 }, async () => onMessage(message));
         } catch (error) {
           this.logger.error('Error consuming message..', error);
         }
       },
     });
   }
-
-  // async onMessage(message) {
-  //   const key = message.key;
-  //   const decodedMessage: any = await this.registryService.decode(
-  //     message.value,
-  //   );
-
-  //   this.logger.log('Consumed message:', {
-  //     key: key,
-  //     value: decodedMessage,
-  //   });
-  // }
 
   async connect() {
     try {
