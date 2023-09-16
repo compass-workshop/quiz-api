@@ -26,4 +26,9 @@ export default () => ({
     api_key: process.env.SCHEMA_REGISTRY_API_KEY,
     api_secret: process.env.SCHEMA_REGISTRY_API_SECRET,
   },
+  ksqldb: {
+    url: process.env.KSQL_URL,
+    port: process.env.KSQL_PORT,
+    token: process.env.KSQL_TOKEN,
+  },
 });

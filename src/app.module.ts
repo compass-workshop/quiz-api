@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TestModule } from './test/test.module';
 import { ConfigModule } from '@nestjs/config';
+import { KsqldbModule } from './providers/ksqldb/ksqldb.module';
 import configuration from './config/configuration';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { EvaluationModule } from './evaluation/evaluation.module';
@@ -16,6 +17,7 @@ import { EvaluationModule } from './evaluation/evaluation.module';
     TestModule,
     AnalyticsModule,
     EvaluationModule,
+    KsqldbModule,
   ],
   controllers: [AppController],
   providers: [AppService],
