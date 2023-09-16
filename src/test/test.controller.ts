@@ -1,5 +1,6 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { TestService } from './test.service';
+import { SubmittedTestDto } from './dto/submitted-test.dto';
 
 @Controller('tests')
 export class TestController {
@@ -13,5 +14,14 @@ export class TestController {
   @Get('/:id')
   async getTest(@Param('id') id: string) {
     return this.testService.getTest(id);
+  }
+
+  @Post('/:userId/:testId')
+  async submitTest(
+    @Body() testBody: SubmittedTestDto,
+    @Param('userId') userId: string,
+    @Param('testId') testId: string,
+  ) {
+    return this.testService.submitTest(testBody);
   }
 }
