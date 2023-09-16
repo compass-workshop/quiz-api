@@ -22,7 +22,7 @@ export class SubmittedTestConsumer implements OnModuleInit {
     await this.consumerService.consume({
       topic: {
         topics: [topics?.submittedTestTopic?.name],
-        fromBeginning: true,
+        fromBeginning: false,
       },
       config: { groupId: groupId },
 
