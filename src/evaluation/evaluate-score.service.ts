@@ -4,6 +4,10 @@ import { DBClientFactory } from 'src/db-client/db-client.factory';
 import { Test } from 'src/test/dto/test.dto';
 import { Question } from 'src/test/dto/question.dto';
 import { EvaluationProducerService } from './producer/evaluation-producer.service';
+import {
+  EvaluatedAnswer,
+  Evaluation,
+} from './interfaces/evaluated-test.interface';
 
 enum Status {
   PASSED = 'PASSED',
@@ -30,7 +34,7 @@ export class EvaluateScoreService {
       const testId: string =
         '09dd6726-55d0-4224-93fe-880f2cb5efef' || userTest?.testId;
       const testDetails: Test = await this.getTest(testId);
-      const evaluatedAnswers = [];
+      const evaluatedAnswers: EvaluatedAnswer[] = [];
       let rawScore = 0;
 
       userTest?.answers?.forEach((answer: Answer) => {
@@ -41,7 +45,7 @@ export class EvaluateScoreService {
         if (!currQuestion) {
           throw new NotFoundException('Question not found in DB');
         }
-        const evaluatedAnswer = {
+        const evaluatedAnswer: EvaluatedAnswer = {
           questionId: answer?.questionId,
           questionScore: this.getScore(currQuestion, answer),
           selectedAnswer: this.getSelectedOption(currQuestion, answer),
@@ -51,13 +55,13 @@ export class EvaluateScoreService {
       });
 
       const maxScore: number = userTest?.answers?.length;
-      const evaluation = {
+      const evaluation: Evaluation = {
         maxScore,
         rawScore,
         status: this.findStatus(maxScore, rawScore),
         evaluatedAnswers,
       };
-      this.evaluationProducerService.createSubmitTestKafkaRecord(
+      this.evaluationProducerService.createEvaluatedTestKafkaRecord(
         evaluation,
         userTest,
       );

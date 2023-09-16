@@ -3,6 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { ProducerService } from 'src/providers/kafka/producer.service';
 import { RegistryService } from 'src/providers/kafka/registry.service';
 import { SubmittedTest } from '../interfaces/submitted-test.interface';
+import {
+  EvaluatedTestMsg,
+  Evaluation,
+} from '../interfaces/evaluated-test.interface';
 
 @Injectable()
 export class EvaluationProducerService {
@@ -14,7 +18,10 @@ export class EvaluationProducerService {
     private readonly producerService: ProducerService,
   ) {}
 
-  async createSubmitTestKafkaRecord(evaluation, userTest: SubmittedTest) {
+  async createEvaluatedTestKafkaRecord(
+    evaluation: Evaluation,
+    userTest: SubmittedTest,
+  ): Promise<void> {
     const { topics } = this.configService.get('kafka');
 
     const key = `${userTest?.testId}___${userTest?.user?.id}`;
@@ -47,8 +54,10 @@ export class EvaluationProducerService {
     );
   }
 
-  // construct submit-test kafka record
-  generateEvaluatedTestKafkaRecord(evaluation, userTest: SubmittedTest) {
+  generateEvaluatedTestKafkaRecord(
+    evaluation: Evaluation,
+    userTest: SubmittedTest,
+  ): EvaluatedTestMsg {
     return {
       evaluation: evaluation,
       testId: userTest?.testId,
