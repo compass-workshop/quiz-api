@@ -14,6 +14,10 @@ export default () => ({
         eventName: 'submittedTest',
         name: `quiz.submit-test`,
       },
+      evaluatedTestTopic: {
+        eventName: 'evaluatedTest',
+        name: `quiz.evaluated-test`,
+      },
     },
     groupId: `quiz-groupid`,
   },
@@ -26,5 +30,6 @@ export default () => ({
     url: process.env.KSQL_URL,
     port: process.env.KSQL_PORT,
     token: process.env.KSQL_TOKEN,
+    userAnalyticsTable: 'USER_ANALYTICS_TABLE',
   },
 });

@@ -5,6 +5,8 @@ import { TestModule } from './test/test.module';
 import { ConfigModule } from '@nestjs/config';
 import { KsqldbModule } from './providers/ksqldb/ksqldb.module';
 import configuration from './config/configuration';
+import { AnalyticsModule } from './analytics/analytics.module';
+import { EvaluationModule } from './evaluation/evaluation.module';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import configuration from './config/configuration';
       load: [configuration],
     }),
     TestModule,
+    AnalyticsModule,
+    EvaluationModule,
     KsqldbModule,
   ],
   controllers: [AppController],
