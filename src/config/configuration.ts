@@ -30,5 +30,6 @@ export default () => ({
     url: process.env.KSQL_URL,
     port: process.env.KSQL_PORT,
     token: process.env.KSQL_TOKEN,
+    userAnalyticsTable: 'USER_ANALYTICS_TABLE',
   },
 });

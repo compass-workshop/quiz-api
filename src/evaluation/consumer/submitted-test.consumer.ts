@@ -14,7 +14,7 @@ export class SubmittedTestConsumer implements OnModuleInit {
     private readonly configService: ConfigService,
     private readonly registryService: RegistryService,
     private readonly evaluateScoreService: EvaluateScoreService,
-  ) { }
+  ) {}
 
   async onModuleInit() {
     const { topics, groupId } = this.configService.get('kafka');
