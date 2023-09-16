@@ -23,14 +23,10 @@ export class KsqldbService {
   // private methods
   async _postQuery(url, data) {
     const { token } = this.configService.get('ksqldb');
-    console.log('in postQery');
     const headers = {
       'Content-Type': 'application/json',
       Authorization: token,
     };
-    console.log('url', url);
-    console.log('data', data);
-    console.log('options', { headers });
     const ksqlDBResponse = await lastValueFrom(
       this.httpService.post(url, data, { headers }).pipe(
         map((response) => {
