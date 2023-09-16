@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { RegistryService } from '../../providers/kafka/registry.service';
 import { SubmittedTest } from '../interfaces/submitted-test.interface';
 import { ConsumerService } from 'src/providers/kafka/consumer.service';
+import { EvaluateScoreService } from '../evaluate-score.service';
 
 @Injectable()
 export class SubmittedTestConsumer implements OnModuleInit {
@@ -12,7 +13,8 @@ export class SubmittedTestConsumer implements OnModuleInit {
     private readonly consumerService: ConsumerService,
     private readonly configService: ConfigService,
     private readonly registryService: RegistryService,
-  ) {}
+    private readonly evaluateScoreService: EvaluateScoreService,
+  ) { }
 
   async onModuleInit() {
     const { topics, groupId } = this.configService.get('kafka');
@@ -37,6 +39,8 @@ export class SubmittedTestConsumer implements OnModuleInit {
             value: decodedMessage,
           },
         );
+
+        this.evaluateScoreService.evaluateTest(decodedMessage);
       },
     });
   }

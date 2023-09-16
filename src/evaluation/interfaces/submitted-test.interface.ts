@@ -1,14 +1,14 @@
 export interface SubmittedTest {
   answers: Answer[];
-  testID: string;
-  submittedAt: string;
+  testId: string;
+  submittedAt: number;
   user: {
     id: string;
     email: string;
   }
 }
 
-interface Answer {
+export interface Answer {
   questionId: string;
   questionText: string;
   selectedAnswer: string;
