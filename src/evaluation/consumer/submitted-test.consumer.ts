@@ -5,8 +5,8 @@ import { SubmittedTest } from '../interfaces/submitted-test.interface';
 import { ConsumerService } from 'src/providers/kafka/consumer.service';
 
 @Injectable()
-export class AnalyticsConsumer implements OnModuleInit {
-  private readonly logger = new Logger(AnalyticsConsumer.name);
+export class SubmittedTestConsumer implements OnModuleInit {
+  private readonly logger = new Logger(SubmittedTestConsumer.name);
 
   constructor(
     private readonly consumerService: ConsumerService,
@@ -19,7 +19,7 @@ export class AnalyticsConsumer implements OnModuleInit {
 
     await this.consumerService.consume({
       topic: {
-        topics: [topics?.evaluatedTestTopic?.name],
+        topics: [topics?.submittedTestTopic?.name],
         fromBeginning: true,
       },
       config: { groupId: groupId },
@@ -31,7 +31,7 @@ export class AnalyticsConsumer implements OnModuleInit {
         );
 
         this.logger.log(
-          `Consumed message from ${topics?.evaluatedTestTopic?.name}: `,
+          `Consumed message from ${topics?.submittedTestTopic?.name} topic: `,
           {
             key: key,
             value: decodedMessage,

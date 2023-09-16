@@ -5,6 +5,7 @@ import { TestModule } from './test/test.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { EvaluationModule } from './evaluation/evaluation.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
     }),
     TestModule,
     AnalyticsModule,
+    EvaluationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
