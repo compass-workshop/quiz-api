@@ -13,7 +13,7 @@ export class SubmittedTestConsumer implements OnModuleInit {
     private readonly consumerService: ConsumerService,
     private readonly configService: ConfigService,
     private readonly registryService: RegistryService,
-    private readonly evaluateScoreService: EvaluateScoreService
+    private readonly evaluateScoreService: EvaluateScoreService,
   ) {}
 
   async onModuleInit() {
