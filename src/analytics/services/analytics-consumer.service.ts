@@ -1,9 +1,9 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { RegistryService } from '../../providers/kafka/registry.service';
-import { SubmittedTest } from '../interfaces/submitted-test.interface';
+import { EvaluatedTestMsg } from 'src/evaluation/interfaces/evaluated-test.interface';
 import { ConsumerService } from 'src/providers/kafka/consumer.service';
-import { EvaluateScoreService } from '../evaluate-score.service';
+import { AnalyticsStreamService } from './analytics-stream.service';
 
 @Injectable()
 export class SubmittedTestConsumer implements OnModuleInit {
@@ -13,7 +13,7 @@ export class SubmittedTestConsumer implements OnModuleInit {
     private readonly consumerService: ConsumerService,
     private readonly configService: ConfigService,
     private readonly registryService: RegistryService,
-    private readonly evaluateScoreService: EvaluateScoreService
+    private readonly analyticsStreamService: AnalyticsStreamService,
   ) {}
 
   async onModuleInit() {
@@ -21,26 +21,33 @@ export class SubmittedTestConsumer implements OnModuleInit {
 
     await this.consumerService.consume({
       topic: {
-        topics: [topics?.submittedTestTopic],
+        topics: [topics?.evaluatedTestTopic?.name],
         fromBeginning: true,
       },
       config: { groupId: groupId },
 
       onMessage: async (message) => {
-        const key = await this.registryService.decode(message.key);
-        const decodedMessage: SubmittedTest = await this.registryService.decode(
-          message.value,
-        );
+        const key = message.key;
+        const decodedMessage: EvaluatedTestMsg =
+          await this.registryService.decode(message.value);
 
         this.logger.log(
-          `Consumed message from ${topics?.submittedTestTopic} topic: `,
+          `Consumed message from ${topics?.evaluatedTestTopic?.name} topic: `,
           {
             key: key,
             value: decodedMessage,
           },
         );
 
-        this.evaluateScoreService.evaluateTest(decodedMessage);
+        // User analytics stream data
+        const streamData = {
+          USERID: decodedMessage.user.id,
+          TESTID: decodedMessage.testId,
+          SCORE: decodedMessage.evaluation.rawScore,
+        };
+
+        // Post data to user analytics stream
+        this.analyticsStreamService.insertDataToUserAnalyticsStream(streamData);
       },
     });
   }
