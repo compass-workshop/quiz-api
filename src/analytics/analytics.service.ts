@@ -11,7 +11,7 @@ export class AnalyticsService {
     private readonly configService: ConfigService,
   ) {}
 
-  async getAnalytics(userId: string): Promise<Analytics> {
+  async getAnalytics(userId: string): Promise<Analytics | object> {
     const { userAnalyticsTable } = this.configService.get('ksqldb');
     const queryResponse = await this.ksqldbService.runQuery({
       ksql: `SELECT * FROM  ${userAnalyticsTable} WHERE  USERID = '${userId}';`,
@@ -29,16 +29,15 @@ export class AnalyticsService {
       .map((match) => match.replace(/`/g, ''));
 
     // Extract and map rows to meaningful objects
-    const queryResult: Analytics = queryResponse.slice(1).map((rowData) => {
-      const values = rowData.row.columns;
-      const rowObject = {};
+    const firstRowFound = queryResponse.slice(1).find((rowData) => rowData.row);
+    const rowObject = {};
+    if (firstRowFound) {
+      const values = firstRowFound.row.columns;
 
       for (let i = 0; i < columnNames.length; i++) {
         rowObject[columnNames[i]] = values[i];
       }
-
-      return rowObject;
-    });
-    return queryResult;
+    }
+    return rowObject;
   }
 }
