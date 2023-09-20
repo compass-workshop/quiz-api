@@ -25,14 +25,13 @@ export class EvaluateScoreService {
     this.dbClient = this.dbClientFactory.getDatabaseClient('Prisma');
   }
 
-  async evaluateTest(userTest: SubmittedTest) {
+  async evaluateTest(userTest) {
     try {
       if (!userTest) {
         throw new NotFoundException('Submitted test details not found');
       }
 
-      const testId: string =
-        '09dd6726-55d0-4224-93fe-880f2cb5efef' || userTest?.testId;
+      const testId: string = userTest?.test_id;
       const testDetails: Test = await this.getTest(testId);
       const evaluatedAnswers: EvaluatedAnswer[] = [];
       let rawScore = 0;

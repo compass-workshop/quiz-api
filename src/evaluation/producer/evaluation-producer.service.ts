@@ -57,12 +57,66 @@ export class EvaluationProducerService {
   generateEvaluatedTestKafkaRecord(
     evaluation: Evaluation,
     userTest: SubmittedTest,
-  ): EvaluatedTestMsg {
+  ) {
     return {
-      evaluation: evaluation,
-      testId: userTest?.testId,
-      submittedAt: userTest?.submittedAt.toString(),
-      user: userTest?.user,
+      fact_id: 'fact1',
+      fact_name: 'fact name 1',
+      timestamp: 123,
+      test_id: '2c9d7877-2e96-47b8-8fc8-6488510bddf8',
+      raw_score: 1,
+      max_score: 5,
+      status: 'FAILED',
+      evaluated_answers: [
+        {
+          question_id: 'question1',
+          question_text: 'What is the question?',
+          correct_answer: 'correct answer',
+          submitted_answer: 'submitted answer',
+          raw_score: 1,
+          max_score: 1,
+          status: 'correct',
+        },
+        {
+          question_id: 'question1',
+          question_text: 'What is the question?',
+          correct_answer: 'correct answer',
+          submitted_answer: 'submitted answer',
+          raw_score: 1,
+          max_score: 1,
+          status: 'correct',
+        },
+        {
+          question_id: 'question1',
+          question_text: 'What is the question?',
+          correct_answer: 'correct answer',
+          submitted_answer: 'submitted answer',
+          raw_score: 1,
+          max_score: 1,
+          status: 'correct',
+        },
+        {
+          question_id: 'question1',
+          question_text: 'What is the question?',
+          correct_answer: 'correct answer',
+          submitted_answer: 'submitted answer',
+          raw_score: 1,
+          max_score: 1,
+          status: 'correct',
+        },
+        {
+          question_id: 'question1',
+          question_text: 'What is the question?',
+          correct_answer: 'correct answer',
+          submitted_answer: 'submitted answer',
+          raw_score: 1,
+          max_score: 1,
+          status: 'correct',
+        },
+      ],
+      user: {
+        id: 'user1',
+        email: 'user@user.com',
+      },
     };
   }
 }

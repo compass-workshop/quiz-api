@@ -12,11 +12,11 @@ export default () => ({
     topics: {
       submittedTestTopic: {
         eventName: 'submittedTest',
-        name: `quiz.submit-test`,
+        name: `gcp.eu-west-2.workshop.test.dev.fct.test-submitted.0`,
       },
       evaluatedTestTopic: {
         eventName: 'evaluatedTest',
-        name: `quiz.evaluated-test`,
+        name: `gcp.eu-west-2.workshop.test.dev.fct.test-evaluated.0`,
       },
     },
     groupId: `quiz-groupid`,

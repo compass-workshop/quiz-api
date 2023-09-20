@@ -49,9 +49,37 @@ export class TestProducerService {
   // construct submit-test kafka record
   generateSubmitTestKafkaRecord(submittedTestData) {
     return {
-      answers: submittedTestData.submittedAnswers,
-      testId: submittedTestData.testId,
-      submittedAt: submittedTestData.submittedAt,
+      fact_id: 'fact1',
+      fact_name: 'fact name 1',
+      timestamp: 123456,
+      test_id: '2c9d7877-2e96-47b8-8fc8-6488510bddf8',
+      submitted_answers: [
+        {
+          question_id: 'question1',
+          question_text: 'What is the question',
+          answer: 'answer1',
+        },
+        {
+          question_id: 'question2',
+          question_text: 'What is the question',
+          answer: 'answer2',
+        },
+        {
+          question_id: 'question3',
+          question_text: 'What is the question',
+          answer: 'answer3',
+        },
+        {
+          question_id: 'question4',
+          question_text: 'What is the question',
+          answer: 'answer4',
+        },
+        {
+          question_id: 'question5',
+          question_text: 'What is the question',
+          answer: 'answer5',
+        },
+      ],
       user: {
         id: submittedTestData.userId,
         email: submittedTestData.email,
