@@ -5,8 +5,10 @@ import { RegistryService } from 'src/providers/kafka/registry.service';
 import { SubmittedTest } from '../interfaces/submitted-test.interface';
 import {
   EvaluatedTestMsg,
-  Evaluation,
+  EvaluatedAnswer,
+  EvaluatedTestStatus,
 } from '../interfaces/evaluated-test.interface';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class EvaluationProducerService {
@@ -19,16 +21,18 @@ export class EvaluationProducerService {
   ) {}
 
   async createEvaluatedTestKafkaRecord(
-    evaluation: Evaluation,
+    evaluatedAnswers: EvaluatedAnswer[],
     userTest: SubmittedTest,
+    testStatus: EvaluatedTestStatus,
   ): Promise<void> {
     const { topics } = this.configService.get('kafka');
 
-    const key = `${userTest?.testId}___${userTest?.user?.id}`;
+    const key = `${userTest?.user?.id}`;
 
     const evaluatedTesRecordData = this.generateEvaluatedTestKafkaRecord(
-      evaluation,
+      evaluatedAnswers,
       userTest,
+      testStatus,
     );
 
     const encodedMessage = await this.registryService.encode(
@@ -55,14 +59,20 @@ export class EvaluationProducerService {
   }
 
   generateEvaluatedTestKafkaRecord(
-    evaluation: Evaluation,
+    evaluatedAnswers: EvaluatedAnswer[],
     userTest: SubmittedTest,
+    testStatus: EvaluatedTestStatus,
   ): EvaluatedTestMsg {
     return {
-      evaluation: evaluation,
-      testId: userTest?.testId,
-      submittedAt: userTest?.submittedAt.toString(),
-      user: userTest?.user,
+      fact_id: uuidv4(),
+      fact_name: 'TestSubmitted',
+      timestamp: userTest.timestamp,
+      test_id: userTest.test_id,
+      raw_score: testStatus.raw_score,
+      max_score: testStatus.max_score,
+      status: testStatus.status,
+      evaluated_answers: evaluatedAnswers,
+      user: userTest.user,
     };
   }
 }
