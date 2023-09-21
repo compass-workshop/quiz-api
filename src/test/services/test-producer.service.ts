@@ -15,14 +15,21 @@ export class TestProducerService {
     private readonly producerService: ProducerService,
   ) {}
 
-  async createSubmitTestKafkaRecord(submittedTestData: SubmittedTestDto) {
+  async createSubmitTestKafkaRecord(
+    submittedTestData: SubmittedTestDto,
+    userId: string,
+    testId: string,
+  ) {
     const { topics } = this.configService.get('kafka');
 
     // Need to discuss
-    const key = `${submittedTestData.userId}`;
+    const key = `${userId}`;
 
-    const submittedTestRecordData =
-      this.generateSubmitTestKafkaRecord(submittedTestData);
+    const submittedTestRecordData = this.generateSubmitTestKafkaRecord(
+      submittedTestData,
+      userId,
+      testId,
+    );
 
     const encodedMessage = await this.registryService.encode(
       `${topics?.submittedTestTopic?.name}-value`,
@@ -48,17 +55,17 @@ export class TestProducerService {
   }
 
   // construct submit-test kafka record
-  generateSubmitTestKafkaRecord(submittedTestData) {
+  generateSubmitTestKafkaRecord(submittedTestData, userId, testId) {
     return {
       fact_id: uuidv4(),
       fact_name: 'TestSubmitted',
       timestamp: submittedTestData.submittedAt,
-      test_id: submittedTestData.testId,
+      test_id: testId,
       submitted_answers: this.getSubmittedAnswer(
         submittedTestData.submittedAmswers,
       ),
       user: {
-        id: submittedTestData.userId,
+        id: userId,
         email: submittedTestData.email,
       },
     };

@@ -12,10 +12,6 @@ export class SubmittedAnswer {
 }
 
 export class SubmittedTestDto {
-  @IsString()
-  @IsNotEmpty()
-  testId: string;
-
   @IsNumber()
   @IsNotEmpty()
   submittedAt: number;
@@ -23,10 +19,6 @@ export class SubmittedTestDto {
   @IsString()
   @IsNotEmpty()
   submittedBy: string;
-
-  @IsString()
-  @IsNotEmpty()
-  userId: string;
 
   @IsString()
   @IsNotEmpty()

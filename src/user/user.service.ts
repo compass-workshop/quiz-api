@@ -27,15 +27,14 @@ export class UserService {
         .slice(1)
         .map((latestTestData) => latestTestData.row.columns[1]);
 
-      const updatedTests = tests.map((test) => {
-        if (attemtedTests.includes(test.id)) {
-          return { ...test, isAttempted: true };
-        } else {
-          return { ...test, isAttempted: false };
-        }
+      return tests.map((test) => {
+        const isAttempted = attemtedTests.includes(test.id);
+        return {
+          id: test.id,
+          name: test.name,
+          isAttempted,
+        };
       });
-
-      return updatedTests;
     } catch (error) {
       this.logger.error(error);
       throw new Error(error);
@@ -61,7 +60,7 @@ export class UserService {
       const firstRowFound = responseFromKSQL
         .slice(1)
         .find((rowData) => rowData.row);
-      const rowObject = {};
+      const rowObject: any = {};
       if (firstRowFound) {
         const values = firstRowFound.row.columns;
 
@@ -69,7 +68,17 @@ export class UserService {
           rowObject[columnNames[i]] = values[i];
         }
       }
-      return rowObject;
+
+      return {
+        ...rowObject,
+        EVALUATED_ANSWERS: rowObject.EVALUATED_ANSWERS.map(
+          (evaluatedAnswers) => {
+            const { CORRECT_ANSWER, ...evaluationWithoutAnswer } =
+              evaluatedAnswers;
+            return evaluationWithoutAnswer;
+          },
+        ),
+      };
     } catch (error) {
       throw new Error(error);
     }
