@@ -16,7 +16,7 @@ export default () => ({
       },
       evaluatedTestTopic: {
         eventName: 'evaluatedTest',
-        name: `gcp.eu-west-2.workshop.test.dev.fct.test-evaluated.0`,
+        name: `gcp.us-west-4.workshop.test.dev.fct.test-evaluated.0`,
       },
     },
     groupId: `quiz-groupid`,

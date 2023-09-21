@@ -11,15 +11,7 @@ import {
   EvaluatedAnswer,
   EvaluatedTestStatus,
 } from './interfaces/evaluated-test.interface';
-
-enum TestStatus {
-  PASSED = 'PASSED',
-  FAILED = 'FAILED',
-}
-enum QuestionStatus {
-  CORRECT = 'CORRECT',
-  INCORRECT = 'INCORRECT',
-}
+import { TestStatus, QuestionStatus } from './enums/test.enum';
 
 @Injectable()
 export class EvaluateScoreService {

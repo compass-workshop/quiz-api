@@ -35,6 +35,11 @@ export class EvaluationProducerService {
       testStatus,
     );
 
+    const encodedKey = await this.registryService.encode(
+      `${topics?.submittedTestTopic?.name}-key`,
+      key,
+    );
+
     const encodedMessage = await this.registryService.encode(
       `${topics?.evaluatedTestTopic?.name}-value`,
       evaluatedTesRecordData,
@@ -44,7 +49,7 @@ export class EvaluationProducerService {
       topic: topics?.evaluatedTestTopic?.name,
       messages: [
         {
-          key: key,
+          key: encodedKey,
           value: encodedMessage,
         },
       ],
