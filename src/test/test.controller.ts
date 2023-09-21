@@ -22,6 +22,6 @@ export class TestController {
     @Param('userId') userId: string,
     @Param('testId') testId: string,
   ) {
-    return this.testService.submitTest(testBody);
+    return this.testService.submitTest(testBody, userId, testId);
   }
 }
