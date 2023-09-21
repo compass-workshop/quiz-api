@@ -43,7 +43,7 @@ export class EvaluateScoreService {
           );
 
           if (!currQuestion) {
-            throw new NotFoundException('Question not found in text in DB');
+            throw new NotFoundException('Question not found in test in DB');
           }
           const marksObtained = this.getScore(currQuestion, submittedAnswer);
           const evaluatedAnswer: EvaluatedAnswer = {
