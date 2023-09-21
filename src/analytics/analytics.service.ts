@@ -14,7 +14,7 @@ export class AnalyticsService {
   async getAnalytics(userId: string): Promise<Analytics | object> {
     const { userAnalyticsTable } = this.configService.get('ksqldb');
     const queryResponse = await this.ksqldbService.runQuery({
-      ksql: `SELECT * FROM  ${userAnalyticsTable} WHERE  USERID = '${userId}';`,
+      ksql: `SELECT * FROM  ${userAnalyticsTable} WHERE USER_ID = '${userId}';`,
       streamProperties: {},
     });
 
