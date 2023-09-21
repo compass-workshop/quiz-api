@@ -36,7 +36,7 @@ export class EvaluationProducerService {
     );
 
     const encodedKey = await this.registryService.encode(
-      `${topics?.submittedTestTopic?.name}-key`,
+      `${topics?.evaluatedTestTopic?.name}-key`,
       key,
     );
 
@@ -70,7 +70,7 @@ export class EvaluationProducerService {
   ): EvaluatedTestMsg {
     return {
       fact_id: uuidv4(),
-      fact_name: 'TestSubmitted',
+      fact_name: 'TestEvaluated',
       timestamp: userTest.timestamp,
       test_id: userTest.test_id,
       raw_score: testStatus.raw_score,
