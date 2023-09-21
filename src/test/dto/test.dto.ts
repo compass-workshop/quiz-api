@@ -7,11 +7,13 @@ export class Test {
     example: 'abcd-1234-efgh-5678',
   })
   id: string;
+
   @ApiProperty({
     description: 'Test name',
     example: 'Test 1',
   })
   name: string;
+  
   @ApiProperty({
     description: 'Test Questions',
     type: [Question],
