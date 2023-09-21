@@ -7,8 +7,6 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "postinstall": "npx prisma generate",
-    "prisma:migrate": "npx prisma migrate dev",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -78,9 +76,5 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  },
-  "prisma": {
-    "schema": "./prisma/schema.prisma",
-    "seed": "ts-node ./prisma/seed.ts"
   }
 }
