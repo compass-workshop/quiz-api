@@ -1,8 +1,11 @@
 import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
 
-class SubmittedAnswer {
+export class SubmittedAnswer {
   @IsString()
   questionId: string;
+
+  @IsString()
+  questionText: string;
 
   @IsString()
   selectedAnswer: string;
@@ -24,6 +27,10 @@ export class SubmittedTestDto {
   @IsString()
   @IsNotEmpty()
   userId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  email: string;
 
   @IsNotEmpty()
   submittedAmswers: SubmittedAnswer[];

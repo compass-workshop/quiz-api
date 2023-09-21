@@ -6,7 +6,7 @@ import { SubmittedTestDto } from './dto/submitted-test.dto';
 export class TestController {
   constructor(private readonly testService: TestService) {}
 
-  @Get('')
+  @Get()
   async getTests() {
     return await this.testService.getTests();
   }

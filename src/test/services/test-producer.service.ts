@@ -1,8 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { RegistryService } from '../../providers/kafka/registry.service';
-import { SubmittedTestDto } from '../dto/submitted-test.dto';
+import { SubmittedTestDto, SubmittedAnswer } from '../dto/submitted-test.dto';
 import { ProducerService } from 'src/providers/kafka/producer.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class TestProducerService {
@@ -18,7 +19,7 @@ export class TestProducerService {
     const { topics } = this.configService.get('kafka');
 
     // Need to discuss
-    const key = `${submittedTestData.testId}___${submittedTestData.userId}`;
+    const key = `${submittedTestData.userId}`;
 
     const submittedTestRecordData =
       this.generateSubmitTestKafkaRecord(submittedTestData);
@@ -49,13 +50,25 @@ export class TestProducerService {
   // construct submit-test kafka record
   generateSubmitTestKafkaRecord(submittedTestData) {
     return {
-      answers: submittedTestData.submittedAnswers,
-      testId: submittedTestData.testId,
-      submittedAt: submittedTestData.submittedAt,
+      fact_id: uuidv4(),
+      fact_name: 'TestSubmitted',
+      timestamp: submittedTestData.submittedAt,
+      test_id: submittedTestData.testId,
+      submitted_answers: this.getSubmittedAnswer(
+        submittedTestData.submittedAmswers,
+      ),
       user: {
         id: submittedTestData.userId,
         email: submittedTestData.email,
       },
     };
+  }
+
+  getSubmittedAnswer(submittedAmswers: SubmittedAnswer[]) {
+    return submittedAmswers.map((submittedAmswer: SubmittedAnswer) => ({
+      question_id: submittedAmswer.questionId,
+      question_text: submittedAmswer.questionText,
+      answer: submittedAmswer.selectedAnswer,
+    }));
   }
 }

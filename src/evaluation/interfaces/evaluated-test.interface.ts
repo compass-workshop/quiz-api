@@ -1,22 +1,30 @@
 export interface EvaluatedTestMsg {
-  evaluation: Evaluation;
-  testId: string;
-  submittedAt: string;
+  fact_id: string;
+  fact_name: string;
+  timestamp: number;
+  test_id: string;
+  raw_score: number;
+  max_score: number;
+  status: string;
+  evaluated_answers: EvaluatedAnswer[];
   user: {
     id: string;
     email: string;
   };
 }
 
-export interface Evaluation {
-  maxScore: number;
-  rawScore: number;
+export interface EvaluatedAnswer {
+  question_id: string;
+  question_text: string;
+  correct_answer: string;
+  submitted_answer: string;
+  raw_score: number;
+  max_score: number;
   status: string;
-  evaluatedAnswers: EvaluatedAnswer[];
 }
 
-export interface EvaluatedAnswer {
-  questionId: string;
-  questionScore: number;
-  selectedAnswer: string;
+export interface EvaluatedTestStatus {
+  raw_score: number;
+  max_score: number;
+  status: string;
 }
