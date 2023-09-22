@@ -24,4 +24,12 @@ export class TestController {
   ) {
     return this.testService.submitTest(testBody, userId, testId);
   }
+
+  @Get('/:userId/:testId')
+  async reviewTest(
+    @Param('userId') userId: string,
+    @Param('testId') testId: string,
+  ) {
+    return this.testService.reviewTest(userId, testId);
+  }
 }
