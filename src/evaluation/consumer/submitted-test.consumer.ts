@@ -21,19 +21,19 @@ export class SubmittedTestConsumer implements OnModuleInit {
 
     await this.consumerService.consume({
       topic: {
-        topics: [topics?.submittedTestTopic?.name],
+        topics: [topics?.submittedTestTopic],
         fromBeginning: true,
       },
       config: { groupId: groupId },
 
       onMessage: async (message) => {
-        const key = message.key;
+        const key = await this.registryService.decode(message.key);
         const decodedMessage: SubmittedTest = await this.registryService.decode(
           message.value,
         );
 
         this.logger.log(
-          `Consumed message from ${topics?.submittedTestTopic?.name} topic: `,
+          `Consumed message from ${topics?.submittedTestTopic} topic: `,
           {
             key: key,
             value: decodedMessage,
