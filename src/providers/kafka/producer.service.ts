@@ -5,22 +5,31 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ProducerService {
-  private readonly clientId = 'quiz-client';
+  private producers = {};
 
   constructor(private readonly configService: ConfigService) {}
 
   async produce(record: ProducerRecord) {
     const { topic } = record;
+
     const producer = await this.getProducer(topic);
     return producer.produce(record);
   }
 
   async getProducer(topic: string) {
+    const { producerClientId } = this.configService.get('kafka');
+
     // initialize a new kafka client and initialize a producer from it
-    const producer = new KafkajsProducer(topic, {
-      clientId: this.clientId,
-      ...this.configService.get('kafka'),
-    });
+    let producer: KafkajsProducer;
+
+    if (this.producers[topic]) {
+      producer = this.producers[topic];
+    } else {
+      producer = new KafkajsProducer(topic, {
+        clientId: producerClientId,
+        ...this.configService.get('kafka'),
+      });
+    }
 
     await producer.connect();
     return producer;

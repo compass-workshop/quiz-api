@@ -10,16 +10,11 @@ export default () => ({
     },
     connectionTimeout: 5000,
     topics: {
-      submittedTestTopic: {
-        eventName: 'submittedTest',
-        name: `gcp.eu-west-2.workshop.test.dev.fct.test-submitted.0`,
-      },
-      evaluatedTestTopic: {
-        eventName: 'evaluatedTest',
-        name: `gcp.us-west-4.workshop.test.dev.fct.test-evaluated.0`,
-      },
+      submittedTestTopic: process.env.SUBMITTED_TEST_TOPIC,
+      evaluatedTestTopic: process.env.EVALUATED_TEST_TOPIC,
     },
-    groupId: `quiz-groupid`,
+    groupId: process.env.CONSUMER_GROUP_ID,
+    producerClientId: process.env.PRODUCER_CLIENT_ID,
   },
   confluentRegistry: {
     host: process.env.SCHEMA_REGISTRY_HOST,
@@ -30,7 +25,7 @@ export default () => ({
     url: process.env.KSQL_URL,
     port: process.env.KSQL_PORT,
     token: process.env.KSQL_TOKEN,
-    userLatestResultTable: 'TBL_LATEST_TEST_RESULT_0',
-    userAnalyticsTable: 'TBL_USER_ANALYTICS',
+    userLatestResultTable: process.env.LATEST_RESULT_TABLE,
+    userAnalyticsTable: process.env.USER_ANALYTICS_TABLE,
   },
 });
