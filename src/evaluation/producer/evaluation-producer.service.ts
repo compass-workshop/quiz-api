@@ -36,17 +36,17 @@ export class EvaluationProducerService {
     );
 
     const encodedKey = await this.registryService.encode(
-      `${topics?.evaluatedTestTopic?.name}-key`,
+      `${topics?.evaluatedTestTopic}-key`,
       key,
     );
 
     const encodedMessage = await this.registryService.encode(
-      `${topics?.evaluatedTestTopic?.name}-value`,
+      `${topics?.evaluatedTestTopic}-value`,
       evaluatedTesRecordData,
     );
 
     this.producerService.produce({
-      topic: topics?.evaluatedTestTopic?.name,
+      topic: topics?.evaluatedTestTopic,
       messages: [
         {
           key: encodedKey,
@@ -57,7 +57,7 @@ export class EvaluationProducerService {
 
     this.logger.log(
       'Successfully produced message to ' +
-        topics?.evaluatedTestTopic?.name +
+        topics?.evaluatedTestTopic +
         ' having key ' +
         key,
     );

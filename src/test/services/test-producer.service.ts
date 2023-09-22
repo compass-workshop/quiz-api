@@ -22,8 +22,10 @@ export class TestProducerService {
   ) {
     const { topics } = this.configService.get('kafka');
 
-    // Need to discuss
-    const key = `${userId}`;
+    const key = await this.registryService.encode(
+      `${topics?.submittedTestTopic}-key`,
+      `${userId}`,
+    );
 
     const submittedTestRecordData = this.generateSubmitTestKafkaRecord(
       submittedTestData,
@@ -32,12 +34,12 @@ export class TestProducerService {
     );
 
     const encodedMessage = await this.registryService.encode(
-      `${topics?.submittedTestTopic?.name}-value`,
+      `${topics?.submittedTestTopic}-value`,
       submittedTestRecordData,
     );
 
     this.producerService.produce({
-      topic: topics?.submittedTestTopic?.name,
+      topic: topics?.submittedTestTopic,
       messages: [
         {
           key: key,
@@ -48,7 +50,7 @@ export class TestProducerService {
 
     this.logger.log(
       'Successfully produced message to ' +
-        topics?.submittedTestTopic?.name +
+        topics?.submittedTestTopic +
         ' having key ' +
         key,
     );
