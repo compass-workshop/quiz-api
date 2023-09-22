@@ -1,10 +1,9 @@
 import { Injectable, NotFoundException, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/database/prisma.service';
 import { Test } from './dto/test.dto';
-// import { Test } from './entities/test.entity';
 import { SubmittedTestDto } from './dto/submitted-test.dto';
 import { TestProducerService } from './services/test-producer.service';
 import { DBClientFactory } from 'src/db-client/db-client.factory';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class TestService {
@@ -12,9 +11,9 @@ export class TestService {
   dbClient: any;
 
   constructor(
-    private prismaService: PrismaService,
     private testProducerService: TestProducerService,
     private dbClientFactory: DBClientFactory,
+    private userService: UserService,
   ) {
     this.dbClient = this.dbClientFactory.getDatabaseClient('Prisma');
   }
@@ -54,6 +53,26 @@ export class TestService {
     } catch (error) {
       this.logger.error(error);
       throw new Error(error);
+    }
+  }
+
+  async reviewTest(userId: string, testId: string): Promise<any> {
+    try {
+      const [test, userAttemptedTest] = await Promise.all([
+        this.dbClient.findTest(testId),
+        this.userService.getAttemptedTest(userId, testId),
+      ]);
+
+      userAttemptedTest['EVALUATED_ANSWERS'] = userAttemptedTest[
+        'EVALUATED_ANSWERS'
+      ].map((answer, index) => {
+        answer.options = test.questions[index]?.options || [];
+        return answer;
+      });
+
+      return userAttemptedTest;
+    } catch (error) {
+      throw error;
     }
   }
 }
