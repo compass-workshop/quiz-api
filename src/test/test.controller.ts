@@ -6,7 +6,7 @@ import { SubmittedTestDto } from './dto/submitted-test.dto';
 export class TestController {
   constructor(private readonly testService: TestService) {}
 
-  @Get('')
+  @Get()
   async getTests() {
     return await this.testService.getTests();
   }
@@ -22,6 +22,6 @@ export class TestController {
     @Param('userId') userId: string,
     @Param('testId') testId: string,
   ) {
-    return this.testService.submitTest(testBody);
+    return this.testService.submitTest(testBody, userId, testId);
   }
 }
