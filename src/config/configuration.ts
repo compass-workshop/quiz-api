@@ -12,11 +12,11 @@ export default () => ({
     topics: {
       submittedTestTopic: {
         eventName: 'submittedTest',
-        name: `quiz.submit-test`,
+        name: `gcp.eu-west-2.workshop.test.dev.fct.test-submitted.0`,
       },
       evaluatedTestTopic: {
         eventName: 'evaluatedTest',
-        name: `quiz.evaluated-test`,
+        name: `gcp.us-west-4.workshop.test.dev.fct.test-evaluated.0`,
       },
     },
     groupId: `quiz-groupid`,
@@ -30,6 +30,7 @@ export default () => ({
     url: process.env.KSQL_URL,
     port: process.env.KSQL_PORT,
     token: process.env.KSQL_TOKEN,
-    userAnalyticsTable: 'USER_ANALYTICS_TABLE',
+    userLatestResultTable: 'TBL_LATEST_TEST_RESULT_0',
+    userAnalyticsTable: 'TBL_USER_ANALYTICS',
   },
 });

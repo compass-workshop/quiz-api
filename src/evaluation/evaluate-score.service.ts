@@ -1,18 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Answer, SubmittedTest } from './interfaces/submitted-test.interface';
+import {
+  SubmittedAnswer,
+  SubmittedTest,
+} from './interfaces/submitted-test.interface';
 import { DBClientFactory } from 'src/db-client/db-client.factory';
 import { Test } from 'src/test/dto/test.dto';
 import { Question } from 'src/test/dto/question.dto';
 import { EvaluationProducerService } from './producer/evaluation-producer.service';
 import {
   EvaluatedAnswer,
-  Evaluation,
+  EvaluatedTestStatus,
 } from './interfaces/evaluated-test.interface';
-
-enum Status {
-  PASSED = 'PASSED',
-  FAILED = 'FAILED',
-}
+import { TestStatus, QuestionStatus } from './enums/test.enum';
 
 @Injectable()
 export class EvaluateScoreService {
@@ -31,39 +30,50 @@ export class EvaluateScoreService {
         throw new NotFoundException('Submitted test details not found');
       }
 
-      const testId: string =
-        '09dd6726-55d0-4224-93fe-880f2cb5efef' || userTest?.testId;
+      const testId: string = userTest?.test_id;
       const testDetails: Test = await this.getTest(testId);
       const evaluatedAnswers: EvaluatedAnswer[] = [];
-      let rawScore = 0;
+      let totalMaxScore = 0;
+      let totalRawScore = 0;
 
-      userTest?.answers?.forEach((answer: Answer) => {
-        const currQuestion: Question = testDetails?.questions?.find(
-          (question) => question?.id === answer?.questionId,
-        );
+      userTest?.submitted_answers?.forEach(
+        (submittedAnswer: SubmittedAnswer) => {
+          const currQuestion: Question = testDetails?.questions?.find(
+            (question) => question?.id === submittedAnswer?.question_id,
+          );
 
-        if (!currQuestion) {
-          throw new NotFoundException('Question not found in DB');
-        }
-        const evaluatedAnswer: EvaluatedAnswer = {
-          questionId: answer?.questionId,
-          questionScore: this.getScore(currQuestion, answer),
-          selectedAnswer: this.getSelectedOption(currQuestion, answer),
-        };
-        rawScore += evaluatedAnswer.questionScore;
-        evaluatedAnswers.push(evaluatedAnswer);
-      });
+          if (!currQuestion) {
+            throw new NotFoundException('Question not found in test in DB');
+          }
+          const marksObtained = this.getScore(currQuestion, submittedAnswer);
+          const evaluatedAnswer: EvaluatedAnswer = {
+            question_id: submittedAnswer?.question_id,
+            question_text: currQuestion?.text,
+            correct_answer: currQuestion?.answer,
+            submitted_answer: submittedAnswer?.answer,
+            max_score: currQuestion?.maxScore,
+            raw_score: marksObtained,
+            status: this.findQuestionStatus(
+              currQuestion?.maxScore,
+              marksObtained,
+            ),
+          };
+          totalMaxScore += evaluatedAnswer.max_score;
+          totalRawScore += evaluatedAnswer.raw_score;
+          evaluatedAnswers.push(evaluatedAnswer);
+        },
+      );
 
-      const maxScore: number = userTest?.answers?.length;
-      const evaluation: Evaluation = {
-        maxScore,
-        rawScore,
-        status: this.findStatus(maxScore, rawScore),
-        evaluatedAnswers,
+      const status = this.findTestStatus(totalMaxScore, totalRawScore);
+      const testStatus: EvaluatedTestStatus = {
+        max_score: totalMaxScore,
+        raw_score: totalRawScore,
+        status,
       };
       this.evaluationProducerService.createEvaluatedTestKafkaRecord(
-        evaluation,
+        evaluatedAnswers,
         userTest,
+        testStatus,
       );
     } catch (error) {
       console.log('Test can not be evaluated', error);
@@ -76,13 +86,16 @@ export class EvaluateScoreService {
     return test;
   }
 
-  getScore(currQuestion: Question, answer: Answer): number {
-    return answer.selectedAnswer === currQuestion.answer ? 1 : 0;
+  getScore(currQuestion: Question, submittedAnswer: SubmittedAnswer): number {
+    return submittedAnswer.answer === currQuestion.answer ? 1 : 0;
   }
 
-  getSelectedOption(currQuestion: Question, answer: Answer): string {
+  getSelectedOption(
+    currQuestion: Question,
+    submittedAnswer: SubmittedAnswer,
+  ): string {
     const index = currQuestion?.options?.findIndex(
-      (option) => option === answer?.selectedAnswer,
+      (option) => option === submittedAnswer?.answer,
     );
 
     if (index > -1) {
@@ -91,8 +104,13 @@ export class EvaluateScoreService {
     throw new NotFoundException('Selected option not found in DB');
   }
 
-  findStatus(maxScore: number, rawScore: number): string {
-    if (rawScore > maxScore / 2) return Status.PASSED;
-    return Status.FAILED;
+  findTestStatus(maxScore: number, rawScore: number): string {
+    if (rawScore > maxScore / 2) return TestStatus.PASSED;
+    return TestStatus.FAILED;
+  }
+
+  findQuestionStatus(maxScore: number, rawScore: number): string {
+    if (maxScore === rawScore) return QuestionStatus.CORRECT;
+    return QuestionStatus.INCORRECT;
   }
 }
