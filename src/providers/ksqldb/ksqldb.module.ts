@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { KsqldbService } from './ksqldb.service';
-import { HttpModule, HttpService } from '@nestjs/axios';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [HttpModule],

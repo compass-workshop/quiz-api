@@ -12,6 +12,9 @@ export class SubmittedAnswer {
 
   @IsString()
   selectedAnswer: string;
+
+  @IsString()
+  questionText: string;
 }
 
 export class SubmittedTestDto {
@@ -41,5 +44,5 @@ export class SubmittedTestDto {
   })
   @IsArray()
   @IsNotEmpty()
-  submittedAmswers: SubmittedAnswer[];
+  answers: SubmittedAnswer[];
 }
