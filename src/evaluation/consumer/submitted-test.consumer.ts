@@ -6,7 +6,7 @@ import { ConsumerService } from 'src/providers/kafka/consumer.service';
 import { EvaluateScoreService } from '../evaluate-score.service';
 
 @Injectable()
-export class SubmittedTestConsumer implements OnModuleInit {
+export class SubmittedTestConsumer {
   private readonly logger = new Logger(SubmittedTestConsumer.name);
 
   constructor(
@@ -16,32 +16,32 @@ export class SubmittedTestConsumer implements OnModuleInit {
     private readonly evaluateScoreService: EvaluateScoreService,
   ) {}
 
-  async onModuleInit() {
-    const { topics, groupId } = this.configService.get('kafka');
+  // async onModuleInit() {
+  //   const { topics, groupId } = this.configService.get('kafka');
 
-    await this.consumerService.consume({
-      topic: {
-        topics: [topics?.submittedTestTopic],
-        fromBeginning: true,
-      },
-      config: { groupId: groupId },
+  //   await this.consumerService.consume({
+  //     topic: {
+  //       topics: [topics?.submittedTestTopic],
+  //       fromBeginning: true,
+  //     },
+  //     config: { groupId: groupId },
 
-      onMessage: async (message) => {
-        const key = await this.registryService.decode(message.key);
-        const decodedMessage: SubmittedTest = await this.registryService.decode(
-          message.value,
-        );
+  //     onMessage: async (message) => {
+  //       const key = await this.registryService.decode(message.key);
+  //       const decodedMessage: SubmittedTest = await this.registryService.decode(
+  //         message.value,
+  //       );
 
-        this.logger.log(
-          `Consumed message from ${topics?.submittedTestTopic} topic: `,
-          {
-            key: key,
-            value: decodedMessage,
-          },
-        );
+  //       this.logger.log(
+  //         `Consumed message from ${topics?.submittedTestTopic} topic: `,
+  //         {
+  //           key: key,
+  //           value: decodedMessage,
+  //         },
+  //       );
 
-        this.evaluateScoreService.evaluateTest(decodedMessage);
-      },
-    });
-  }
+  //       this.evaluateScoreService.evaluateTest(decodedMessage);
+  //     },
+  //   });
+  // }
 }
